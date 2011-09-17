@@ -14,6 +14,14 @@ class Navbar
     @html_template || self.parent && self.parent.html_template
   end
 
+  def xml_template=(xml_template)
+    @xml_template = ERB.new(xml_template)
+  end
+
+  def xml_template
+    @xml_template || self.parent && self.parent.xml_template
+  end
+
   def add_child(child)
     @children << child
     child.parent = self
@@ -21,5 +29,9 @@ class Navbar
 
   def html
     html_template.result(self.send :binding)
+  end
+
+  def xml
+    xml_template.result(self.send :binding)
   end
 end
