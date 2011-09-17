@@ -6,32 +6,24 @@ class Navbar
     @children = []
   end
 
-  def html_template=(html_template)
-    @html_template = ERB.new(html_template)
-  end
+  [:html, :xml].each do |format|
+    class_eval <<DEF, __FILE__, __LINE__
+    def #{format}_template=(#{format}_template)
+      @#{format}_template = ERB.new(#{format}_template)
+    end
 
-  def html_template
-    @html_template || self.parent && self.parent.html_template
-  end
+    def #{format}_template
+      @#{format}_template || self.parent && self.parent.#{format}_template
+    end
 
-  def xml_template=(xml_template)
-    @xml_template = ERB.new(xml_template)
-  end
-
-  def xml_template
-    @xml_template || self.parent && self.parent.xml_template
+    def #{format}
+      #{format}_template.result(self.send :binding)
+    end
+DEF
   end
 
   def add_child(child)
     @children << child
     child.parent = self
-  end
-
-  def html
-    html_template.result(self.send :binding)
-  end
-
-  def xml
-    xml_template.result(self.send :binding)
   end
 end
