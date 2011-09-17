@@ -17,12 +17,12 @@ class NavbarTest < Test::Unit::TestCase
   def test_html_output
     assert_equal_ignore_space(<<HTML, @navbar.html)
 <ul>
-  <li><a href="http://example.com>Home</a></li>
+  <li><a href="http://example.com">Home</a></li>
   <li>
-    <a href="http://example.com/user>User</a>
+    <a href="http://example.com/user">User</a>
     <ul>
-      <li><a href="http://example.com/user>Show</a></li>
-      <li><a href="http://example.com/user/edit>Edit</a></li>
+      <li><a href="http://example.com/user">Show</a></li>
+      <li><a href="http://example.com/user/edit">Edit</a></li>
     </ul>
   </li>
 </ul>
