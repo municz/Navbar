@@ -29,9 +29,9 @@ DEF
     child.parent = self
   end
 
-  def each
+  def each(&block)
     yield self
-    @children.each { |child| child.each { |n|  yield n } }
+    @children.each { |child| child.each(&block) }
   end
 
   def address_to_name(address)
