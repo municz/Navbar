@@ -1,4 +1,19 @@
 require 'erb'
+
+class NavbarConfig
+  def initialize(navbar)
+    @navbar = navbar
+  end
+
+  def item(name, href)
+    child = Navbar.new(name, href)
+    @navbar << child
+    if block_given?
+      yield NavbarConfig.new(child)
+    end
+  end
+end
+
 class Navbar
   attr_reader :name, :href
   attr_accessor :parent
@@ -42,5 +57,11 @@ DEF
 
   def all_addresses
     self.map {|n| n.href}.compact.uniq
+  end
+
+  def self.define
+    navbar = Navbar.new
+    yield NavbarConfig.new(navbar)
+    navbar
   end
 end

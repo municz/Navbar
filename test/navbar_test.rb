@@ -3,15 +3,13 @@ require File.expand_path("../lib/navbar",File.dirname(__FILE__))
 
 class NavbarTest < Test::Unit::TestCase
   def setup
-    @navbar = Navbar.new
-    home = Navbar.new("Home", "http://example.com")
-    @navbar << home
-    user = Navbar.new("User", "http://example.com/user")
-    user_show = Navbar.new("Show", "http://example.com/user")
-    user_edit = Navbar.new("Edit", "http://example.com/user/edit")
-    user << user_show
-    user << user_edit
-    @navbar << user
+    @navbar = Navbar.define do |n|
+      n.item "Home", "http://example.com"
+      n.item "User", "http://example.com/user" do |u|
+        u.item "Show", "http://example.com/user"
+        u.item "Edit", "http://example.com/user/edit"
+      end
+    end
     @navbar.html_template= File.read(File.expand_path("../navbar.html.erb",__FILE__))
     @navbar.xml_template= File.read(File.expand_path("../navbar.xml.erb",__FILE__))
   end
