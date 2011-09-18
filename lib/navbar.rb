@@ -41,11 +41,6 @@ DEF
   end
 
   def all_addresses
-    ret = []
-    ret << @href if @href
-    @children.each do |child|
-      ret += child.all_addresses
-    end
-    return ret.uniq
+    self.map {|n| n.href}.compact.uniq
   end
 end
