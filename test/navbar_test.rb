@@ -5,13 +5,13 @@ class NavbarTest < Test::Unit::TestCase
   def setup
     @navbar = Navbar.new
     home = Navbar.new("Home", "http://example.com")
-    @navbar.add_child(home)
+    @navbar << home
     user = Navbar.new("User", "http://example.com/user")
     user_show = Navbar.new("Show", "http://example.com/user")
     user_edit = Navbar.new("Edit", "http://example.com/user/edit")
-    user.add_child(user_show)
-    user.add_child(user_edit)
-    @navbar.add_child(user)
+    user << user_show
+    user << user_edit
+    @navbar << user
     @navbar.html_template= File.read(File.expand_path("../navbar.html.erb",__FILE__))
     @navbar.xml_template= File.read(File.expand_path("../navbar.xml.erb",__FILE__))
   end

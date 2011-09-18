@@ -24,7 +24,7 @@ class Navbar
 DEF
   end
 
-  def add_child(child)
+  def <<(child)
     @children << child
     child.parent = self
   end
