@@ -43,6 +43,10 @@ HTML
 XML
   end
 
+  def test_address_to_name
+    assert_equal("Edit", @navbar.address_to_name("http://example.com/user/edit"))
+  end
+
   def assert_equal_ignore_space(expect, current)
     assert_equal(expect.gsub(/\s/,""),current.gsub(/\s/,""))
   end

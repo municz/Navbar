@@ -26,4 +26,17 @@ DEF
     @children << child
     child.parent = self
   end
+
+  def address_to_name(address)
+    if @href == address
+      return @name
+    else
+      @children.each do |child|
+        if name = child.address_to_name(address)
+          return name
+        end
+      end
+    end
+    return nil
+  end
 end
