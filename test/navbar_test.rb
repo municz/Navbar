@@ -47,6 +47,12 @@ XML
     assert_equal("Edit", @navbar.address_to_name("http://example.com/user/edit"))
   end
 
+  def test_all_addresses
+    expected = ["http://example.com","http://example.com/user","http://example.com/user/edit"]
+    current = @navbar.all_addresses
+    assert_equal(expected, current)
+  end
+
   def assert_equal_ignore_space(expect, current)
     assert_equal(expect.gsub(/\s/,""),current.gsub(/\s/,""))
   end

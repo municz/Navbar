@@ -39,4 +39,13 @@ DEF
     end
     return nil
   end
+
+  def all_addresses
+    ret = []
+    ret << @href if @href
+    @children.each do |child|
+      ret += child.all_addresses
+    end
+    return ret.uniq
+  end
 end
