@@ -1,6 +1,8 @@
 require 'erb'
 class Navbar
+  attr_reader :name, :href
   attr_accessor :parent
+  include Enumerable
   def initialize(name = nil, href = nil)
     @name, @href = name, href
     @children = []
@@ -27,17 +29,15 @@ DEF
     child.parent = self
   end
 
+  def each
+    yield self
+    @children.each { |child| child.each { |n|  yield n } }
+  end
+
   def address_to_name(address)
-    if @href == address
-      return @name
-    else
-      @children.each do |child|
-        if name = child.address_to_name(address)
-          return name
-        end
-      end
+    if node = self.find {|n| n.href == address}
+      return node.name
     end
-    return nil
   end
 
   def all_addresses
