@@ -3,11 +3,11 @@ require File.expand_path("../lib/navbar",File.dirname(__FILE__))
 
 class NavbarTest < Test::Unit::TestCase
   def setup
-    @navbar = Navbar.define do |n|
-      n.item "Home", "http://example.com"
-      n.item "User", "http://example.com/user" do |u|
-        u.item "Show", "http://example.com/user"
-        u.item "Edit", "http://example.com/user/edit"
+    @navbar = Navbar.define do
+      item "Home", "http://example.com"
+      item "User", "http://example.com/user" do
+        item "Show", "http://example.com/user"
+        item "Edit", "http://example.com/user/edit"
       end
     end
     @navbar.html_template= File.read(File.expand_path("../navbar.html.erb",__FILE__))

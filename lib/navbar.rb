@@ -1,15 +1,16 @@
 require 'erb'
 
 class NavbarConfig
-  def initialize(navbar)
+  def initialize(navbar, &block)
     @navbar = navbar
+    instance_exec(&block)
   end
 
-  def item(name, href)
+  def item(name, href, &block)
     child = Navbar.new(name, href)
     @navbar << child
     if block_given?
-      yield NavbarConfig.new(child)
+      NavbarConfig.new(child, &block)
     end
   end
 end
@@ -59,9 +60,9 @@ DEF
     self.map {|n| n.href}.compact.uniq
   end
 
-  def self.define
+  def self.define(&block)
     navbar = Navbar.new
-    yield NavbarConfig.new(navbar)
+    config = NavbarConfig.new(navbar,&block)
     navbar
   end
 end
