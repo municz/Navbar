@@ -9,35 +9,36 @@ class NavbarConfig
   def item(name, href, &block)
     child = Navbar.new(name, href)
     @navbar << child
-    if block_given?
-      NavbarConfig.new(child, &block)
-    end
+
+    NavbarConfig.new(child, &block) if block_given?
   end
 end
 
 class Navbar
   attr_reader :name, :href
   attr_accessor :parent
+
   include Enumerable
+
   def initialize(name = nil, href = nil)
     @name, @href = name, href
     @children = []
   end
 
   [:html, :xml].each do |format|
-    class_eval <<DEF, __FILE__, __LINE__
-    def #{format}_template=(#{format}_template)
-      @#{format}_template = ERB.new(#{format}_template)
-    end
+    class_eval <<-DEF, __FILE__, __LINE__
+      def #{format}_template=(#{format}_template)
+        @#{format}_template = ERB.new(#{format}_template)
+      end
 
-    def #{format}_template
-      @#{format}_template || self.parent && self.parent.#{format}_template
-    end
+      def #{format}_template
+        @#{format}_template || self.parent && self.parent.#{format}_template
+      end
 
-    def #{format}
-      #{format}_template.result(self.send :binding)
-    end
-DEF
+      def #{format}
+        #{format}_template.result(self.send :binding)
+      end
+    DEF
   end
 
   def <<(child)
@@ -51,18 +52,17 @@ DEF
   end
 
   def address_to_name(address)
-    if node = self.find {|n| n.href == address}
-      return node.name
-    end
+    found_address = self.find { |node| node.href == address } and return found_address.name
   end
 
   def all_addresses
-    self.map {|n| n.href}.compact.uniq
+    self.map { |node| node.href }.compact.uniq
   end
 
   def self.define(&block)
     navbar = Navbar.new
-    config = NavbarConfig.new(navbar,&block)
+    config = NavbarConfig.new(navbar, &block)
+
     navbar
   end
 end
