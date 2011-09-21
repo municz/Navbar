@@ -1,4 +1,5 @@
 require 'test/unit'
+require File.expand_path("../lib/navbar.rb", File.dirname(__FILE__))
 
 class NavbarTest < Test::Unit::TestCase
   def setup
@@ -12,7 +13,7 @@ class NavbarTest < Test::Unit::TestCase
   end
 
   def test_html_output
-    assert_equal(<<EOS, @navbar.html_output)
+    assert_equal_ignore_space(<<EOS, @navbar.html_output)
 <ul>
   <li><a href="/user">User</a>
     <ul>
@@ -25,7 +26,7 @@ EOS
   end
 
   def test_xml_output
-    assert_equal(<<EOS, @navbar.xml_output)
+    assert_equal_ignore_space(<<EOS, @navbar.xml_output)
 <navbar>
   <item name="User" href="/user">
     <item name="Show" href="/user"/>
@@ -33,5 +34,9 @@ EOS
   </item>
 </navbar>
 EOS
+  end
+
+  def assert_equal_ignore_space(expected, current)
+    assert_equal(expected.gsub(/\s/,""), current.gsub(/\s/,""))
   end
 end
