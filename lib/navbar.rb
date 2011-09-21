@@ -3,10 +3,17 @@ require 'erb'
 class Navbar
   attr_writer :html_template_path
   attr_accessor :parent
+  attr_reader :name, :path
+  include Enumerable
 
   def initialize(name = nil, path = nil)
     @name, @path = name, path
     @children = []
+  end
+
+  def each
+    yield self
+    @children.each { |child| child.each {|node| yield node } }
   end
 
   def html_template_path
@@ -42,14 +49,9 @@ class Navbar
   end
 
   def path_to_name(path)
-    name = nil
-    if @path == path
-      name = @name
-    else
-      @children.each do |child|
-	name = child.path_to_name(path) and break
-      end
+    node = self.find {|node| node.path == path}
+    if node
+      return node.name
     end
-    name
   end
 end
