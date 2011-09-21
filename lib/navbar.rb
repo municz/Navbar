@@ -40,4 +40,16 @@ class Navbar
     end
     output
   end
+
+  def path_to_name(path)
+    name = nil
+    if @path == path
+      name = @name
+    else
+      @children.each do |child|
+	name = child.path_to_name(path) and break
+      end
+    end
+    name
+  end
 end

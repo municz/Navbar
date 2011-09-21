@@ -38,7 +38,13 @@ EOS
 EOS
   end
 
+  def test_path_to_name
+    assert_equal("Edit",@navbar.path_to_name("/user/edit"))
+  end
+
+
   def assert_equal_ignore_space(expected, current)
     assert_equal(expected.gsub(/\s/,""), current.gsub(/\s/,""))
   end
+
 end
