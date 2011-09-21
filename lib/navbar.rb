@@ -1,25 +1,26 @@
+require 'erb'
+
 class Navbar
+  attr_writer :html_template_path
+  attr_accessor :parent
+
   def initialize(name = nil, path = nil)
     @name, @path = name, path
     @children = []
   end
 
+  def html_template_path
+    @html_template_path || parent.html_template_path
+  end
+
   def add_child(child)
     @children << child
+    child.parent = self
   end
 
   def html_output
-    output = ""
-    output << "<li><a href=\"#{@path}\">#{@name}</a>" if @name
-    unless @children.empty?
-      output << "<ul>"
-      @children.each do |child|
-        output << child.html_output
-      end
-      output << "</ul>"
-    end
-    output << "</li>" if @name
-    output
+    template = ERB.new(File.read(html_template_path))
+    template.result(self.send :binding)
   end
 
   def xml_output

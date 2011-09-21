@@ -10,6 +10,8 @@ class NavbarTest < Test::Unit::TestCase
     user.add_child(user_show)
     user_edit = Navbar.new("Edit","/user/edit")
     user.add_child(user_edit)
+    html_template_path = File.expand_path("template.html.erb", File.dirname(__FILE__))
+    @navbar.html_template_path= html_template_path
   end
 
   def test_html_output
