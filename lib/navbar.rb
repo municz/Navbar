@@ -11,9 +11,9 @@ class Navbar
     @children = []
   end
 
-  def each
+  def each(&block)
     yield self
-    @children.each { |child| child.each {|node| yield node } }
+    @children.each { |child| child.each(&block) }
   end
 
   def html_template_path
@@ -49,9 +49,6 @@ class Navbar
   end
 
   def path_to_name(path)
-    node = self.find {|node| node.path == path}
-    if node
-      return node.name
-    end
+    node = self.find {|node| node.path == path } and return node.name
   end
 end
