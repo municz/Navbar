@@ -23,5 +23,20 @@ class Navbar
   end
 
   def xml_output
+    output = ""
+    output << unless @name
+      "<navbar>"
+    else
+      %{<item name="#{@name}" href="#{@path}"#{@children.empty? ? "/" : ""}>}
+    end
+    @children.each do |child|
+      output << child.xml_output
+    end
+    output << unless @name
+      "</navbar>"
+    else
+      @children.empty? and "" or "</item>" 
+    end
+    output
   end
 end
