@@ -1,58 +1,50 @@
 require 'test/unit'
-require File.expand_path("../lib/navbar", File.dirname(__FILE__))
+require File.expand_path("../lib/navbar.rb", File.dirname(__FILE__))
 
 class NavbarTest < Test::Unit::TestCase
   def setup
-    @navbar = Navbar.define do
-      item "Home", "http://example.com"
-      item "User", "http://example.com/user" do
-        item "Show", "http://example.com/user"
-        item "Edit", "http://example.com/user/edit"
-      end
-    end
-
-    @navbar.html_template = File.read(File.expand_path("../navbar.html.erb", __FILE__))
-    @navbar.xml_template = File.read(File.expand_path("../navbar.xml.erb", __FILE__))
+    @navbar = Navbar.new
+    user = Navbar.new("User","/user")
+    @navbar.add_child(user)
+    user_show = Navbar.new("Show","/user")
+    user.add_child(user_show)
+    user_edit = Navbar.new("Edit","/user/edit")
+    user.add_child(user_edit)
+    html_template_path = File.expand_path("template.html.erb", File.dirname(__FILE__))
+    @navbar.html_template_path= html_template_path
   end
 
   def test_html_output
-    assert_equal_ignore_space(<<-HTML, @navbar.html)
-      <ul>
-        <li><a href="http://example.com">Home</a></li>
-        <li>
-          <a href="http://example.com/user">User</a>
-          <ul>
-            <li><a href="http://example.com/user">Show</a></li>
-            <li><a href="http://example.com/user/edit">Edit</a></li>
-          </ul>
-        </li>
-      </ul>
-    HTML
+    assert_equal_ignore_space(<<EOS, @navbar.html_output)
+<ul>
+  <li><a href="/user">User</a>
+    <ul>
+      <li><a href="/user">Show</a></li>
+      <li><a href="/user/edit">Edit</a></li>
+    </ul>
+  </li>
+</ul>
+EOS
   end
 
   def test_xml_output
-    assert_equal_ignore_space(<<-XML, @navbar.xml)
-      <navbar>
-        <item name="Home" href="http://example.com"/>
-        <item name="User" href="http://example.com/user">
-          <item name="Show" href="http://example.com/user"/>
-          <item name="Edit" href="http://example.com/user/edit"/>
-        </item>
-      </navbar>
-    XML
+    assert_equal_ignore_space(<<EOS, @navbar.xml_output)
+<navbar>
+  <item name="User" href="/user">
+    <item name="Show" href="/user"/>
+    <item name="Edit" href="/user/edit"/>
+  </item>
+</navbar>
+EOS
   end
 
-  def test_address_to_name
-    assert_equal("Edit", @navbar.address_to_name("http://example.com/user/edit"))
+  def test_path_to_name
+    assert_equal("Edit",@navbar.path_to_name("/user/edit"))
   end
 
-  def test_all_addresses
-    expected = ["http://example.com","http://example.com/user", "http://example.com/user/edit"]
-    current = @navbar.all_addresses
-    assert_equal(expected, current)
+
+  def assert_equal_ignore_space(expected, current)
+    assert_equal(expected.gsub(/\s/,""), current.gsub(/\s/,""))
   end
 
-  def assert_equal_ignore_space(expect, current)
-    assert_equal(expect.gsub(/\s/,""), current.gsub(/\s/,""))
-  end
 end

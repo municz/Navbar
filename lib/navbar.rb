@@ -1,49 +1,14 @@
 require 'erb'
 
-class NavbarConfig
-  def initialize(navbar, &block)
-    @navbar = navbar
-    instance_exec(&block)
-  end
-
-  def item(name, href, &block)
-    child = Navbar.new(name, href)
-    @navbar << child
-
-    NavbarConfig.new(child, &block) if block_given?
-  end
-end
-
 class Navbar
-  attr_reader :name, :href
+  attr_writer :html_template_path
   attr_accessor :parent
-
+  attr_reader :name, :path
   include Enumerable
 
-  def initialize(name = nil, href = nil)
-    @name, @href = name, href
+  def initialize(name = nil, path = nil)
+    @name, @path = name, path
     @children = []
-  end
-
-  [:html, :xml].each do |format|
-    class_eval <<-DEF, __FILE__, __LINE__
-      def #{format}_template=(#{format}_template)
-        @#{format}_template = ERB.new(#{format}_template)
-      end
-
-      def #{format}_template
-        @#{format}_template || self.parent && self.parent.#{format}_template
-      end
-
-      def #{format}
-        #{format}_template.result(self.send :binding)
-      end
-    DEF
-  end
-
-  def <<(child)
-    @children << child
-    child.parent = self
   end
 
   def each(&block)
@@ -51,18 +16,39 @@ class Navbar
     @children.each { |child| child.each(&block) }
   end
 
-  def address_to_name(address)
-    found_address = self.find { |node| node.href == address } and return found_address.name
+  def html_template_path
+    @html_template_path || parent.html_template_path
   end
 
-  def all_addresses
-    self.map { |node| node.href }.compact.uniq
+  def add_child(child)
+    @children << child
+    child.parent = self
   end
 
-  def self.define(&block)
-    navbar = Navbar.new
-    config = NavbarConfig.new(navbar, &block)
+  def html_output
+    template = ERB.new(File.read(html_template_path))
+    template.result(self.send :binding)
+  end
 
-    navbar
+  def xml_output
+    output = ""
+    output << unless @name
+      "<navbar>"
+    else
+      %{<item name="#{@name}" href="#{@path}"#{@children.empty? ? "/" : ""}>}
+    end
+    @children.each do |child|
+      output << child.xml_output
+    end
+    output << unless @name
+      "</navbar>"
+    else
+      @children.empty? and "" or "</item>" 
+    end
+    output
+  end
+
+  def path_to_name(path)
+    node = self.find {|node| node.path == path } and return node.name
   end
 end

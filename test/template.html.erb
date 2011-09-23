@@ -1,0 +1,13 @@
+<% if @name %>
+<li><a href="<%= @path %>"><%= @name %></a>
+<% end %>
+<% unless @children.empty? %>
+  <ul>
+    <% @children.each do |child| %>
+      <%= child.html_output %>
+    <% end %>
+  </ul>
+<% end %>
+<% if @name %>
+</li>
+<% end %>
