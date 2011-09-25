@@ -49,6 +49,6 @@ class Navbar
   end
 
   def path_to_name(path)
-    node = self.find {|node| node.path == path } and return node.name
+    node = self.find {|n| n.path == path } and return node.name
   end
 end
