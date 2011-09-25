@@ -1,5 +1,18 @@
 require 'erb'
 
+class NavbarBuilder
+  def initialize(node, &block)
+    @node = node
+    block.call(self)
+  end
+
+  def node(name, path, &block)
+    child = Navbar.new(name, path, &block)
+    @node.add_child(child)
+    NavbarBuilder.new(child, &block) if block
+  end
+end
+
 class Navbar
   attr_writer :html_template_path, :xml_template_path
   attr_accessor :parent
@@ -9,6 +22,12 @@ class Navbar
   def initialize(name = nil, path = nil)
     @name, @path = name, path
     @children, @html_template_path, @xml_template_path = [], nil, nil
+  end
+
+  def self.define(&block)
+    root = Navbar.new
+    NavbarBuilder.new(root, &block)
+    root
   end
 
   def each(&block)
