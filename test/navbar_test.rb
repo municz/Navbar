@@ -12,6 +12,8 @@ class NavbarTest < Test::Unit::TestCase
     user.add_child(user_edit)
     html_template_path = File.expand_path("template.html.erb", File.dirname(__FILE__))
     @navbar.html_template_path= html_template_path
+    xml_template_path = File.expand_path("template.xml.erb", File.dirname(__FILE__))
+    @navbar.xml_template_path = xml_template_path
   end
 
   def test_html_output
@@ -42,6 +44,9 @@ EOS
     assert_equal("Edit",@navbar.path_to_name("/user/edit"))
   end
 
+  def test_all_addresses
+    assert_equal(%w{/user /user/edit},@navbar.all_addresses)
+  end
 
   def assert_equal_ignore_space(expected, current)
     assert_equal(expected.gsub(/\s/,""), current.gsub(/\s/,""))
