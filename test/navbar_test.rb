@@ -3,13 +3,13 @@ require File.expand_path("../lib/navbar.rb", File.dirname(__FILE__))
 
 class NavbarTest < Test::Unit::TestCase
   def setup
-    @navbar = Navbar.new
-    user = Navbar.new("User","/user")
-    @navbar.add_child(user)
-    user_show = Navbar.new("Show","/user")
-    user.add_child(user_show)
-    user_edit = Navbar.new("Edit","/user/edit")
-    user.add_child(user_edit)
+    @navbar = Navbar.define do |n|
+      n.node "User", "/user" do |u|
+        u.node "Show", "/user"
+        u.node "Edit", "/user/edit"
+      end
+    end
+
     html_template_path = File.expand_path("template.html.erb", File.dirname(__FILE__))
     @navbar.html_template_path= html_template_path
     xml_template_path = File.expand_path("template.xml.erb", File.dirname(__FILE__))

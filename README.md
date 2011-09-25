@@ -1,11 +1,12 @@
 ### Bonus tasks
 
-The task is to make changes in the code to make the tests pass:
+The task is to implement all the tasks for from bonus-1 branch and make
+changes in the code to make the tests pass:
 
-* Refactor `xml_output` method to use ERB templates.
-* Implement `all_addresses` method.
+* Implement simple DSL for defining the navigation. (See tests for
+  details)
 
-**Bonus reward**: + 1 point.
+**Bonus reward**: + 2 point.
 
 #### Notes
 
