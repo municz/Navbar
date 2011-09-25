@@ -1,9 +1,13 @@
 require 'erb'
 
 class NavbarBuilder
-  def initialize(node, &block)
+  def initialize(node, advanced = false, &block)
     @node = node
-    block.call(self)
+    if advanced
+      instance_exec(&block)
+    else
+      block.call(self)
+    end
   end
 
   def node(name, path, &block)
@@ -27,6 +31,12 @@ class Navbar
   def self.define(&block)
     root = Navbar.new
     NavbarBuilder.new(root, &block)
+    root
+  end
+
+  def self.define!(&block)
+    root = Navbar.new
+    NavbarBuilder.new(root, true, &block)
     root
   end
 
