@@ -1,12 +1,12 @@
 ### Bonus tasks
 
-The task is to implement all the tasks for from bonus-1 branch and make
-changes in the code to make the tests pass:
+The task is to implement all the tasks for from bonus-1 and bonus-2 branches
+and make changes in the code to make the tests pass:
 
-* Implement simple DSL for defining the navigation. (See tests for
+* Implement advanced DSL for defining the navigation. (See tests for
   details)
 
-**Bonus reward**: + 2 point.
+**Bonus reward**: + 3 point.
 
 #### Notes
 

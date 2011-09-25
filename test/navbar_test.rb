@@ -48,8 +48,19 @@ EOS
     assert_equal(%w{/user /user/edit},@navbar.all_addresses)
   end
 
+  def test_advanced_dsl
+    @navbar_2 = Navbar.define! do
+      node "User", "/user" do
+        node "Show", "/user"
+        node "Edit", "/user/edit"
+      end
+    end
+    assert_equal(@navbar.all_addresses, @navbar_2.all_addresses)
+  end
+
   def assert_equal_ignore_space(expected, current)
     assert_equal(expected.gsub(/\s/,""), current.gsub(/\s/,""))
   end
+
 
 end
