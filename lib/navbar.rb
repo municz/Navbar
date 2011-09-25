@@ -42,4 +42,8 @@ class Navbar
   def path_to_name(path)
     node = self.find {|n| n.path == path } and return node.name
   end
+
+  def all_addresses
+    map(&:path).compact.uniq
+  end
 end
