@@ -8,7 +8,7 @@ class Navbar
 
   def initialize(name = nil, path = nil)
     @name, @path = name, path
-    @children = []
+    @children, @html_template_path = [], nil
   end
 
   def each(&block)
