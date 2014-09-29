@@ -1,6 +1,9 @@
-require 'test/unit'
+$LOAD_PATH << File.expand_path('../lib', File.dirname(__FILE__))
 
-class NavbarTest < Test::Unit::TestCase
+require 'minitest/autorun'
+require 'navbar'
+
+class NavbarTest < MiniTest::Unit::TestCase
   def setup
     @navbar = Navbar.new
     user = Navbar.new("User","/user")
